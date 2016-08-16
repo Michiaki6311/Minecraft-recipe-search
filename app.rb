@@ -39,7 +39,7 @@ post '/search' do
 
       count = name.index{|item|item =~ /#{searchword}/}
 
-      response = "#{name[count]}\n#{craft[count]}\n#{image[count]}\n"
+      response = "#{name[count]}\n#{craft[count]}\n#{image[count]}\n" if count
     end
   }
 
