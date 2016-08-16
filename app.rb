@@ -8,7 +8,7 @@ get '/' do
   'Hello,World!'
 end
 
-get '/hi' do
+get '/search' do
   url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
   
   doc = Nokogiri::HTML.parse(open(url), nil,"utf-8")
@@ -30,9 +30,10 @@ get '/hi' do
      image.push(item_img_new)
    end
    
-  
-   count = 40
-   puts name[count]
-   puts craft[count]
-   puts image[count]
+ count = name.index{|item|item =~ /^かまど/}
+ 
+ puts name[count]
+ puts craft[count]
+ puts image[count]
 end
+
