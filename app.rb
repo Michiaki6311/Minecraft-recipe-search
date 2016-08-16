@@ -9,7 +9,13 @@ get '/' do
 end
 
 post '/search' do
-  url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
+    searchword = ""
+  j = JSON.parse(request.body.string)
+  j['events'].select{|e| e['message']}.map{|e|
+    if e['message']['text'] =~ /^#mr/ then
+      searchword = e['message']['text'].gsub(/^#mr\s/,'')
+      
+        url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
   
   doc = Nokogiri::HTML.parse(open(url), nil,"utf-8")
   
@@ -30,20 +36,14 @@ post '/search' do
      image.push(item_img_new)
    end
    
-    searchword = ""
-  j = JSON.parse(request.body.string)
-  j['events'].select{|e| e['message']}.map{|e|
-    if e['message']['text'] =~ /^#mr/ then
-      searchword = e['message']['text'].gsub(/^#mr\s/,'')
+   count = name.index{|item|item =~ /#{searchword}/}
+    
+  "#{name[count]}\n#{craft[count]}\n#{image[count]}\n"
+ 
     else
       searchword = ""
     end
   }
-    count = name.index{|item|item =~ /#{searchword}/}
-    
-    puts name[count]
-    puts craft[count]
-    puts image[count]
 
 end
 
