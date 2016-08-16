@@ -15,7 +15,7 @@ post '/search' do
     if e['message']['text'] =~ /^#mr/ then
       searchword = e['message']['text'].gsub(/^#mr\s/,'')
       
-        url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
+    url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
   
   doc = Nokogiri::HTML.parse(open(url), nil,"utf-8")
   
