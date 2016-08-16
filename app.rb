@@ -43,5 +43,5 @@ post '/search' do
     end
   }
 
-  response
+  response.strip
 end
