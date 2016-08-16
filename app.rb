@@ -4,20 +4,21 @@ require 'open-uri'
 require 'uri'
 require 'nokogiri'
 
+url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
+items = nil
+
 get '/' do
   'Hello,World!'
 end
 
 post '/search' do
-  searchword = ""
+  response = ""
+
   j = JSON.parse(request.body.string)
   j['events'].select{|e| e['message']}.map{|e|
     if e['message']['text'] =~ /^#mr/ then
       searchword = e['message']['text'].gsub(/^#mr\s/,'')
-
-      url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
-
-      doc = Nokogiri::HTML.parse(open(url), nil,"utf-8")
+      doc = Nokogiri::HTML.parse(open(url), nil, "utf-8")
 
       name = []
       craft = []
@@ -38,11 +39,9 @@ post '/search' do
 
       count = name.index{|item|item =~ /#{searchword}/}
 
-      "#{name[count]}\n#{craft[count]}\n#{image[count]}\n"
-
-    else
-      searchword = ""
+      response = "#{name[count]}\n#{craft[count]}\n#{image[count]}\n"
     end
   }
 
+  response
 end
