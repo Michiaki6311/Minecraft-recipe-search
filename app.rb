@@ -4,46 +4,43 @@ require 'open-uri'
 require 'uri'
 require 'nokogiri'
 
+url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
+items = nil
+
 get '/' do
-'Hello,World!'
+  'Hello,World!'
 end
 
 post '/search' do
-	searchword = ""
-j = JSON.parse(request.body.string)
-	j['events'].select{|e| e['message']}.map{|e|
-		if e['message']['text'] =~ /^#mr/ then
-			searchword = e['message']['text'].gsub(/^#mr\s/,'')
+  response = ""
 
-				url = "http://www26.atwiki.jp/minecraft/pages/1073.html"
+  j = JSON.parse(request.body.string)
+  j['events'].select{|e| e['message']}.map{|e|
+    if e['message']['text'] =~ /^#mr/ then
+      searchword = e['message']['text'].gsub(/^#mr\s/,'')
 
-				doc = Nokogiri::HTML.parse(open(url), nil,"utf-8")
+      # parse only first time and keep items
+      if !items
+        doc = Nokogiri::HTML.parse(open(url), nil, "utf-8")
+        items = doc.xpath("//tr").select { |tr|
+          # FIXME: rowspanned item is not contained
+          tr.children.filter('td').length == 3
+        }.map { |tr|
+          item = tr.children.filter('td')
 
-				name = []
-				craft = []
-				image = []
+          {
+            name: item[0].text,
+            image: item[1].xpath('.//img').map {|img| "http:#{img.attribute('src')}#.png" }.join("\n"),
+            craft: item[2].text,
+          }
+        }
+      end
 
-				doc.xpath("//tr//td[@style='text-align:center;vertical-align:MIDDLE;background-color:lightblue;']").each do |item_name|
-				name.push(item_name.text)
-				end
+      count = items.index {|item| item[:name] =~ /#{searchword}/ }
 
-				doc.xpath("//tr//td[@style='vertical-align:MIDDLE;']").each do |item_craft|
-				craft.push(item_craft.text)
-				end
+      response = "#{items[count][:name]}\n#{items[count][:craft]}\n#{items[count][:image]}\n" if count
+    end
+  }
 
-				doc.xpath("//tr//td[@style='text-align:center;vertical-align:MIDDLE;background-color:lightgreen;']").each do |item_img|
-				item_img_new = "http:#{item_img.css('img').attribute('src').value}"
-				image.push(item_img_new)
-				end
-
-				count = name.index{|item|item =~ /#{searchword}/}
-
-		"#{name[count]}\n#{craft[count]}\n#{image[count]}\n"
-
-		else
-			searchword = ""
-				end
-	}
-
+  response.strip
 end
-
