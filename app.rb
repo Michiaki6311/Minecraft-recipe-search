@@ -13,7 +13,6 @@ end
 
 post '/search' do
   response = []
-  l=""
 
   j = JSON.parse(request.body.string)
   j['events'].select{|e| e['message']}.map{|e|
@@ -49,9 +48,7 @@ post '/search' do
       response.push("#{items[y][:name]}\n#{items[y][:craft]}\n#{items[y][:image]}\n") if c
       }
       
-      l = count.last
     end
   }
-  m = l.to_i
-  response[0..m]
+  response[0..4]
 end
