@@ -44,7 +44,7 @@ post '/search' do
       end
       
       count.each {|c|
-      puts y= c.to_i
+      y= c.to_i
       response.push("#{items[y][:name]}\n#{items[y][:craft]}\n#{items[y][:image]}\n") if c
       }
 
