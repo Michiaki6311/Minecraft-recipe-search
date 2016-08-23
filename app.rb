@@ -51,7 +51,5 @@ post '/search' do
     end
   }
 
-  response.each{|z|
-  puts z
-  }
+  puts response
 end
