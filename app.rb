@@ -50,5 +50,5 @@ post '/search' do
       
     end
   }
-  response[0..4]
+  response[0]
 end
