@@ -12,7 +12,7 @@ get '/' do
 end
 
 post '/search' do
-  response = ""
+  response = []
 
   j = JSON.parse(request.body.string)
   j['events'].select{|e| e['message']}.map{|e|
@@ -43,7 +43,6 @@ post '/search' do
         end
       end
       
-      response=[]
       count.each {|c|
       puts y= c.to_i
       response.push("#{items[y][:name]}\n#{items[y][:craft]}\n#{items[y][:image]}\n") if c
