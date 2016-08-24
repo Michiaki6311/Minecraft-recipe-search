@@ -36,19 +36,13 @@ post '/search' do
         }
       end
 
-      count = []
-      items.each_with_index do |x,i|
+      items.each do |x|
         if x[:name] =~ /#{searchword}/
-          count.push("#{i}")
+          response << "#{x[:name]}\n#{x[:craft]}\n#{x[:image]}\n"
         end
       end
-      
-      count.each {|c|
-      y= c.to_i
-      response << "#{items[y][:name]}\n#{items[y][:craft]}\n#{items[y][:image]}\n" if c
-      }
-      
     end
   }
+
   response.strip
 end
