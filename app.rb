@@ -14,6 +14,7 @@ end
 post '/search' do
   array = []
   response = ""
+  message = ""
 
   j = JSON.parse(request.body.string)
   j['events'].select{|e| e['message']}.map{|e|
@@ -40,15 +41,14 @@ post '/search' do
       items.each do |x|
         if x[:name] =~ /#{searchword}/
           array.push("#{x[:name]}\n#{x[:craft]}\n#{x[:image]}\n")
-          response = array.join
-        end
+          message = "no error"
+      end
       end
     end
   }
   
-  if response.strip.length < 1020
-    response.strip
-  else
-    array.sample.strip
-  end
+  response = array.join.strip
+  response = array.sample if response.strip.length > 1024
+  response = "Not Found" if message != "no error"
+  response.strip
 end
