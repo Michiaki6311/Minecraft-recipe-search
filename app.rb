@@ -12,6 +12,7 @@ get '/' do
 end
 
 post '/search' do
+  array = []
   response = ""
 
   j = JSON.parse(request.body.string)
@@ -38,11 +39,16 @@ post '/search' do
 
       items.each do |x|
         if x[:name] =~ /#{searchword}/
-          response << "#{x[:name]}\n#{x[:craft]}\n#{x[:image]}\n"
+          array.push("#{x[:name]}\n#{x[:craft]}\n#{x[:image]}\n")
+          response = array.join
         end
       end
     end
   }
-
-  response.strip
+  
+  if response.strip.length < 1020
+    response.strip
+  else
+    array.sample.strip
+  end
 end
