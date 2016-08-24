@@ -19,6 +19,7 @@ post '/search' do
   j = JSON.parse(request.body.string)
   j['events'].select{|e| e['message']}.map{|e|
     if e['message']['text'] =~ /^#mr/ then
+      message = "exist"
       searchword = e['message']['text'].gsub(/^#mr\s/,'')
 
       # parse only first time and keep items
@@ -41,7 +42,6 @@ post '/search' do
       items.each do |x|
         if x[:name] =~ /#{searchword}/
           array.push("#{x[:name]}\n#{x[:craft]}\n#{x[:image]}\n")
-          message = "no error"
       end
       end
     end
@@ -49,6 +49,6 @@ post '/search' do
   
   response = array.join.strip
   response = array.sample if response.strip.length > 1024
-  response = "Not Found" if message != "no error"
+  response = "Not Found" if array == [] && message == "exist"
   response.strip
 end
