@@ -16,7 +16,7 @@ post '/search' do
   response = ""
   message = ""
 
-  j = JSON.parse(request.body.string)
+  j = JSON.parse(request.body.read)
   j['events'].select{|e| e['message']}.map{|e|
     if e['message']['text'] =~ /^#mr/ then
       message = "exist"
