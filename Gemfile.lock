@@ -58,6 +58,7 @@ DEPENDENCIES
   json
   mechanize
   nokogiri
+  rack
   romaji
   sinatra
   sinatra-contrib
